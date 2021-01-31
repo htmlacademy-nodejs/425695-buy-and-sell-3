@@ -3,7 +3,7 @@
 const DEFAULT_COMMAND = `--help`;
 const DEFAULT_COUNT = 1;
 const ExitCode = {
-  INVALID_ARGUMENT: 9,
+  ERROR: 1,
   SUCCESS: 0,
 };
 const FILE_NAME = `mocks.json`;

@@ -42,7 +42,7 @@ module.exports = {
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
     if (countOffer > 1000) {
       console.info(`Не больше 1000 объявлений.`);
-      process.exit(ExitCode.INVALID_ARGUMENT);
+      process.exit(ExitCode.ERROR);
     }
     const content = JSON.stringify(generateOffers(countOffer));
     fs.writeFile(FILE_NAME, content, (err) => {
