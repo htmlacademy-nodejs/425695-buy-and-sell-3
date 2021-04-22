@@ -41,6 +41,38 @@ class OfferService {
     return Object.assign(oldOffer, offer);
   }
 
+  createComment(offerId, commentText) {
+    const offer = this._offers.find((item) => item.id === offerId);
+
+    if (!offer) {
+      return null;
+    }
+
+    const comment = {id: nanoid(MAX_ID_LENGTH), text: commentText};
+
+    Object.assign(offer, {...offer, comments: [...offer.comments, comment]});
+
+    return comment;
+  }
+
+  dropComment(offerId, commentId) {
+    const offer = this._offers.find((item) => item.id === offerId);
+
+    if (!offer) {
+      return {offer: null, comment: null};
+    }
+
+    const comment = offer.comments.find((item) => item.id === commentId);
+
+    if (!comment) {
+      return {offer, comment: null};
+    }
+
+    Object.assign(offer, {...offer, comments: offer.comments.filter((item) => item.id !== commentId)});
+
+    return {offer, comment};
+  }
+
 }
 
 module.exports = OfferService;

@@ -1,6 +1,10 @@
 'use strict';
 
 const API_PREFIX = `/api`;
+const Env = {
+  DEVELOPMENT: `development`,
+  PRODUCTION: `production`
+};
 
 const DEFAULT_COMMAND = `--help`;
 const DEFAULT_COUNT = 1;
@@ -33,6 +37,7 @@ const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 const FILE_COMMENTS_PATH = `./data/comments.txt`;
 const FILE_MOCKS_PATH = `./${FILE_MOCKS_NAME}`;
+const FILE_LOG = `./logs/api.log`;
 
 const DEFAULT_PORT = 3000;
 
@@ -55,9 +60,11 @@ module.exports = {
   DEFAULT_COMMAND,
   DEFAULT_COUNT,
   DEFAULT_PORT,
+  Env,
   ExitCode,
   FILE_CATEGORIES_PATH,
   FILE_COMMENTS_PATH,
+  FILE_LOG,
   FILE_MOCKS_NAME,
   FILE_MOCKS_PATH,
   FILE_SENTENCES_PATH,
