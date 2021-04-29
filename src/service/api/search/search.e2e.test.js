@@ -7,38 +7,64 @@ const search = require(`./search`);
 const DataService = require(`../../data-service/search`);
 const {mockData} = require(`./mockData`);
 
-const app = express();
-app.use(express.json());
-search(app, new DataService(mockData));
+const createAPI = () => {
+  const app = express();
+  app.use(express.json());
+  search(app, new DataService(mockData));
+  return app;
+};
 
 describe(`API returns offer based on search query`, () => {
 
-  let response;
-
-  beforeAll(async () => {
-    response = await request(app)
+  test(`Status code 200`, async () => {
+    const app = createAPI();
+    const response = await request(app)
       .get(`/search`)
-      .query({
-        query: `Куплю антиквариат`
-      });
+      .query({query: `Куплю антиквариат`});
+
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-  test(`1 offer found`, () => expect(response.body.length).toBe(1));
-  test(`Offer has correct id`, () => expect(response.body[0].id).toBe(`1JYZni`));
+  test(`1 offer found`, async () => {
+    const app = createAPI();
+    const response = await request(app)
+      .get(`/search`)
+      .query({query: `Куплю антиквариат`});
+
+    expect(response.body.length).toBe(1);
+  });
+
+  test(`Offer has correct id`, async () => {
+    const app = createAPI();
+    const response = await request(app)
+      .get(`/search`)
+      .query({query: `Куплю антиквариат`});
+
+    expect(response.body[0].id).toBe(`1JYZni`);
+  });
 });
 
-test(`API returns code 404 if nothing is found`,
-    () => request(app)
+test(`API returns code 404 if nothing is found`, async () => {
+  const app = createAPI();
+  await request(app)
+        .get(`/search`)
+        .query({query: `Куплю антиквариат`});
+
+  await request(app)
       .get(`/search`)
       .query({
         query: `Продам свою душу`
       })
-      .expect(HttpCode.NOT_FOUND)
-);
+      .expect(HttpCode.NOT_FOUND);
+});
 
-test(`API returns 400 when query string is absent`,
-    () => request(app)
+test(`API returns 400 when query string is absent`, async () => {
+  const app = createAPI();
+  await request(app)
+        .get(`/search`)
+        .query({query: `Куплю антиквариат`});
+
+  await request(app)
       .get(`/search`)
-      .expect(HttpCode.BAD_REQUEST)
-);
+      .expect(HttpCode.BAD_REQUEST);
+});
