@@ -15,8 +15,8 @@ const ExitCode = {
 const FILE_MOCKS_NAME = `mocks.json`;
 
 const OfferType = {
-  OFFER: `offer`,
-  SALE: `sale`,
+  OFFER: `OFFER`,
+  SALE: `SALE`,
 };
 
 
