@@ -7,6 +7,8 @@ head
   title Куплю. Продам
   link(rel='stylesheet' href='/css/style.min.css')
 body
+  mixin ticketLabel(type)
+    span(class!=attributes.class || `ticket-card__label`) #{type === `OFFER` ? `Куплю` : `Продам`}
   - const getRandomInt = (max) => Math.ceil(Math.random()*max);
   mixin categoryImage(category)
     - const idPadded = `0${getRandomInt(6)}`
