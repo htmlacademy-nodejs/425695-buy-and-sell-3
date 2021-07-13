@@ -12,7 +12,6 @@ const ExitCode = {
   ERROR: 1,
   SUCCESS: 0,
 };
-const FILE_MOCKS_NAME = `mocks.json`;
 
 const OfferType = {
   OFFER: `OFFER`,
@@ -32,6 +31,9 @@ const PictureRestrict = {
 
 const USER_ARGV_INDEX = 2;
 
+const DIR_LOG = `./logs`;
+const FILE_FILL_DB_NAME = `./queries/fill-db.sql`;
+const FILE_MOCKS_NAME = `mocks.json`;
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
@@ -60,10 +62,12 @@ module.exports = {
   DEFAULT_COMMAND,
   DEFAULT_COUNT,
   DEFAULT_PORT,
+  DIR_LOG,
   Env,
   ExitCode,
   FILE_CATEGORIES_PATH,
   FILE_COMMENTS_PATH,
+  FILE_FILL_DB_NAME,
   FILE_LOG,
   FILE_MOCKS_NAME,
   FILE_MOCKS_PATH,

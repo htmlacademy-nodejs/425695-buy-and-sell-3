@@ -7,6 +7,7 @@
     "start": "cross-env NODE_ENV=production node ./src/service/service.js",
     "start::debug": "cross-env NODE_ENV=development nodemon ./src/service/service.js",
     "start.dev": "nodemon ./src/service/service.js --server 3000",
+    "fill": "node ./src/service/service.js --fill",
     "start-front-server": "nodemon ./src/express/index.js",
     "test": "npm run test::rest",
     "test::rest": "jest ./src/service",
