@@ -19,7 +19,7 @@ const getPictureFileName = (pictureOrderNumber) => {
   const formatedNumber = pictureOrderNumber < 10
     ? `0${pictureOrderNumber}` : pictureOrderNumber;
 
-  return `item${formatedNumber}.jpg`
+  return `item${formatedNumber}`
   ;
 };
 

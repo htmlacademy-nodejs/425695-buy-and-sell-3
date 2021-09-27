@@ -6,8 +6,8 @@ const mainRouter = new Router();
 const api = getAPI();
 mainRouter.get(`/`, async (req, res) => {
   const [offers, categories] = await Promise.all([
-    api.getOffers(),
-    api.getCategories()
+    api.getOffers({comments: false}),
+    api.getCategories(true)
   ]);
   res.render(`main`, {categories, offers});
 });
