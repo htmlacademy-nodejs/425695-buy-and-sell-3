@@ -13,6 +13,9 @@ body
   mixin categoryImage(category)
     - const idPadded = `0${getRandomInt(6)}`
     img(src=`/img/cat${idPadded}.jpg` srcset=`/img/cat${idPadded}@2x.jpg 2x` alt=category.name)
+  mixin insertOfferImage(offer)
+    - const idPadded = `0${getRandomInt(6)}`
+    img(src=`/img/${offer.picture}.jpg` srcset=`/img/${offer.picture}@2x.jpg 2x` alt=offer.name)
   include partials/header.pug
   block content
   include partials/footer.pug
