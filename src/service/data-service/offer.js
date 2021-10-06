@@ -1,77 +1,137 @@
 'use strict';
 
-const {nanoid} = require(`nanoid`);
-const {MAX_ID_LENGTH} = require(`../constants`);
+const Aliase = require(`../models/aliase`);
 
 class OfferService {
-  constructor(offers) {
-    this._offers = offers;
+  constructor(sequelize) {
+    this._Offer = sequelize.models.Offer;
+    this._Comment = sequelize.models.Comment;
+    this._Category = sequelize.models.Category;
   }
 
-  create(offer) {
-    const newOffer = Object
-      .assign({id: nanoid(MAX_ID_LENGTH), comments: []}, offer);
-
-    this._offers.push(newOffer);
-    return newOffer;
+  async create(offerData) {
+    const offer = await this._Offer.create(offerData);
+    await offer.addCategories(offerData.categories);
+    return offer.get();
   }
 
-  drop(id) {
-    const offer = this.findOne(id);
+  async drop(id) {
+    const deletedRows = await this._Offer.destroy({
+      where: {id}
+    });
+    return !!deletedRows;
+  }
 
-    if (!offer) {
-      return null;
+  async findOne(id, needComments) {
+    const include = [Aliase.CATEGORIES];
+
+    if (needComments) {
+      include.push(Aliase.COMMENTS);
+    }
+    return await this._Offer.findByPk(id, {include});
+  }
+
+  async update(id, offer) {
+    const [affectedRows] = await this._Offer.update(offer, {
+      where: {id}
+    });
+    return !!affectedRows;
+  }
+
+  async findAll(needComments) {
+    const include = [Aliase.CATEGORIES];
+
+    if (needComments) {
+      include.push(Aliase.COMMENTS);
     }
 
-    this._offers = this._offers.filter((item) => item.id !== id);
-    return offer;
+    const offers = await this._Offer.findAll({
+      include,
+      order: [
+        [`createdAt`, `DESC`]
+      ]
+    });
+
+    return offers.map((item) => item.get());
   }
 
-  findAll() {
-    return this._offers;
+  async findPage({limit, offset}) {
+    const {count, rows} = await this._Offer.findAndCountAll({
+      limit,
+      offset,
+      include: [Aliase.CATEGORIES],
+      order: [
+        [`createdAt`, `DESC`]
+      ],
+      distinct: true
+    });
+    return {count, offers: rows};
   }
 
-  findOne(id) {
-    return this._offers.find((item) => item.id === id);
-  }
+  // create(offer) {
+  //   const newOffer = Object
+  //     .assign({id: nanoid(MAX_ID_LENGTH), comments: []}, offer);
 
-  update(id, offer) {
-    const oldOffer = this.findOne(id);
+  //   this._offers.push(newOffer);
+  //   return newOffer;
+  // }
 
-    return Object.assign(oldOffer, offer);
-  }
+  // drop(id) {
+  //   const offer = this.findOne(id);
 
-  createComment(offerId, commentText) {
-    const offer = this._offers.find((item) => item.id === offerId);
+  //   if (!offer) {
+  //     return null;
+  //   }
 
-    if (!offer) {
-      return null;
-    }
+  //   this._offers = this._offers.filter((item) => item.id !== id);
+  //   return offer;
+  // }
 
-    const comment = {id: nanoid(MAX_ID_LENGTH), text: commentText};
+  // findAll() {
+  //   return this._offers;
+  // }
 
-    Object.assign(offer, {...offer, comments: [...offer.comments, comment]});
+  // findOne(id) {
+  //   return this._offers.find((item) => item.id === id);
+  // }
 
-    return comment;
-  }
+  // update(id, offer) {
+  //   const oldOffer = this.findOne(id);
 
-  dropComment(offerId, commentId) {
-    const offer = this._offers.find((item) => item.id === offerId);
+  //   return Object.assign(oldOffer, offer);
+  // }
 
-    if (!offer) {
-      return {offer: null, comment: null};
-    }
+  // createComment(offerId, commentText) {
+  //   const offer = this._offers.find((item) => item.id === offerId);
 
-    const comment = offer.comments.find((item) => item.id === commentId);
+  //   if (!offer) {
+  //     return null;
+  //   }
 
-    if (!comment) {
-      return {offer, comment: null};
-    }
+  //   const comment = {id: nanoid(MAX_ID_LENGTH), text: commentText};
 
-    Object.assign(offer, {...offer, comments: offer.comments.filter((item) => item.id !== commentId)});
+  //   Object.assign(offer, {...offer, comments: [...offer.comments, comment]});
 
-    return {offer, comment};
-  }
+  //   return comment;
+  // }
+
+  // dropComment(offerId, commentId) {
+  //   const offer = this._offers.find((item) => item.id === offerId);
+
+  //   if (!offer) {
+  //     return {offer: null, comment: null};
+  //   }
+
+  //   const comment = offer.comments.find((item) => item.id === commentId);
+
+  //   if (!comment) {
+  //     return {offer, comment: null};
+  //   }
+
+  //   Object.assign(offer, {...offer, comments: offer.comments.filter((item) => item.id !== commentId)});
+
+  //   return {offer, comment};
+  // }
 
 }
 
